@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from finder.models import Cargo, Location, Car
+
+admin.site.register(Cargo)
+admin.site.register(Location)
+admin.site.register(Car)
