@@ -16,7 +16,6 @@ def get_nearby_cars(cargo):
     for car in nearby_cars:
         car_coordinates = (car.location.latitude, car.location.longitude)
         dist = distance(cargo_coordinates, car_coordinates).miles
-        print(dist)
         if dist < 450:
             result.append(car)
     return result
@@ -84,4 +83,15 @@ class CargoListView(APIView):
         return Response(cargo_data)
 
 
+class CargoDetailView(APIView):
+    def get(self, request, pk):
+        cargo = get_object_or_404(Cargo, id=pk)
+        nearby_cars = get_nearby_cars(cargo)
+        nearby_cars_numbers = [car.number for car in nearby_cars]
 
+        serializer = CargoSerializer(cargo)
+        filtered_data = {key: value for key, value in serializer.data.items() if key in ['pick_up_location',
+                                                                                         'delivery_location', 'weight']}
+
+        return Response({'cargo_data': filtered_data, 'nearby_cars_numbers': nearby_cars_numbers},
+                        status=status.HTTP_200_OK)
