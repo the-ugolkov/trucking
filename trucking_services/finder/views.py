@@ -27,3 +27,25 @@ class CargoCreateView(APIView):
 
         serializer = CargoSerializer(cargo)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CargoUpdateView(APIView):
+    def put(self, request, pk):
+        weight = request.data.get('weight')
+        description = request.data.get('description')
+
+        cargo = get_object_or_404(Cargo, id=pk)
+
+        cargo.weight = weight
+        cargo.description = description
+        cargo.save()
+
+        serializer = CargoSerializer(cargo)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, pk):
+        cargo = get_object_or_404(Cargo, id=pk)
+
+        cargo.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
