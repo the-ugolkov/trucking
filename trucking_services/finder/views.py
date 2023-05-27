@@ -10,7 +10,7 @@ from finder.serializers import CargoSerializer
 
 def get_nearby_cars(cargo):
     cargo_coordinates = (cargo.pick_up_location.latitude, cargo.pick_up_location.longitude)
-    nearby_cars = Car.objects.filter(location__isnull=False)
+    nearby_cars = Car.objects.filter(payload__gt=cargo.weight)
     result = []
 
     for car in nearby_cars:
