@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from finder.models import Location, Cargo, Car
-from finder.serializers import CargoSerializer
+from finder.serializers import CargoSerializer, CarSerializer
 
 
 def get_nearby_cars(cargo):
@@ -95,3 +95,17 @@ class CargoDetailView(APIView):
 
         return Response({'cargo_data': filtered_data, 'nearby_cars_numbers': nearby_cars_numbers},
                         status=status.HTTP_200_OK)
+
+
+class CarUpdateView(APIView):
+    def put(self, request, pk):
+        zip = request.data.get('zip')
+
+        car = get_object_or_404(Car, id=pk)
+        location = get_object_or_404(Location, zip=zip)
+
+        car.location = location
+        car.save()
+
+        serializer = CarSerializer(car)
+        return Response(serializer.data, status=status.HTTP_200_OK)
