@@ -1,14 +1,29 @@
-from django.shortcuts import render
+from geopy.distance import distance
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from finder.models import Location, Cargo
+from finder.models import Location, Cargo, Car
 from finder.serializers import CargoSerializer
 
 
+def get_nearby_cars(cargo):
+    cargo_coordinates = (cargo.pick_up_location.latitude, cargo.pick_up_location.longitude)
+    nearby_cars = Car.objects.filter(location__isnull=False)
+    result = []
+
+    for car in nearby_cars:
+        car_coordinates = (car.location.latitude, car.location.longitude)
+        dist = distance(cargo_coordinates, car_coordinates).miles
+        print(dist)
+        if dist < 450:
+            result.append(car)
+    return result
+
+
 class CargoCreateView(APIView):
+
     def post(self, request):
         zip_pick_up = request.data.get('zip_pick_up')
         zip_delivery = request.data.get('zip_delivery')
@@ -49,3 +64,24 @@ class CargoUpdateView(APIView):
         cargo.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CargoListView(APIView):
+    def get(self, request):
+        cargos = Cargo.objects.all()
+
+        cargo_data = []
+        for cargo in cargos:
+            nearby_cars = get_nearby_cars(cargo)
+
+            serializer = CargoSerializer(cargo)
+
+            cargo_data.append({
+                'cargo': serializer.data,
+                'nearby_cars_count': len(nearby_cars)
+            })
+
+        return Response(cargo_data)
+
+
+

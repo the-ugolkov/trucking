@@ -34,6 +34,9 @@ class Car(models.Model):
     location = models.ForeignKey('Location', on_delete=models.CASCADE)
     payload = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(1000)])
 
+    def __str__(self):
+        return f"{self.number}   {self.payload}"
+
     def clean(self):
         super().clean()
         if self.number:
