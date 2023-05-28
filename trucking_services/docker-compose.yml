@@ -6,7 +6,9 @@ services:
     build: .
     container_name: django
     command: bash -c "python manage.py makemigrations && python manage.py migrate
-     && python manage.py load_data uszips.csv && python manage.py create_cars && python manage.py runserver 0.0.0.0:8000"
+     && python manage.py load_data uszips.csv && python manage.py create_cars 
+     && python manage.py createsuperuser --noinput --username=admin --email=admin@example.com
+     && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/usr/src/app
     ports:
@@ -15,6 +17,8 @@ services:
       - pgdb
       - celery
       - redis
+    environment:
+      - DJANGO_SUPERUSER_PASSWORD=123
 
   celery:
     build: .

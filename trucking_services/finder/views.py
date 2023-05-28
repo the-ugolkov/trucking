@@ -8,7 +8,7 @@ from finder.models import Location, Cargo, Car
 from finder.serializers import CargoSerializer, CarSerializer
 
 
-def get_nearby_cars(cargo, max_distance):
+def get_nearby_cars(cargo, max_distance=450):
     cargo_coordinates = (cargo.pick_up_location.latitude, cargo.pick_up_location.longitude)
     nearby_cars = Car.objects.filter(payload__gt=cargo.weight)
     result = []
