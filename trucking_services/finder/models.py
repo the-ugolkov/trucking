@@ -11,6 +11,9 @@ class Cargo(models.Model):
     weight = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(1000)])
     description = models.TextField()
 
+    def __str__(self):
+        return f"{self.description[:50]}..."
+
 
 class Location(models.Model):
     city = models.CharField(max_length=123)
@@ -18,6 +21,9 @@ class Location(models.Model):
     zip = models.CharField(unique=True, max_length=10)
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
+
+    def __str__(self):
+        return f"{self.city} {self.state}"
 
 
 class Car(models.Model):
@@ -28,7 +34,7 @@ class Car(models.Model):
     payload = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(1000)])
 
     def __str__(self):
-        return f"{self.number}   {self.payload}"
+        return f"{self.number}   Грузополъемность: {self.payload} кг."
 
     def clean(self):
         super().clean()
