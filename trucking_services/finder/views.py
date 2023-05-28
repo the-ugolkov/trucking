@@ -67,7 +67,7 @@ class CargoUpdateView(APIView):
 
 class CargoListView(APIView):
     def get(self, request):
-        min_weight = request.GET.get('min_weight') if 'min_weight' in request.GET else '0'
+        min_weight = request.GET.get('min_weight') if 'min_weight' in request.GET else '1'
         max_weight = request.GET.get('max_weight') if 'max_weight' in request.GET else '1000'
         max_distance = request.GET.get('max_distance') if 'max_distance' in request.GET else '450'
 
