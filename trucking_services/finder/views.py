@@ -8,7 +8,7 @@ from finder.models import Location, Cargo, Car
 from finder.serializers import CargoSerializer, CarSerializer
 
 
-def get_nearby_cars(cargo):
+def get_nearby_cars(cargo, max_distance):
     cargo_coordinates = (cargo.pick_up_location.latitude, cargo.pick_up_location.longitude)
     nearby_cars = Car.objects.filter(payload__gt=cargo.weight)
     result = []
@@ -16,7 +16,7 @@ def get_nearby_cars(cargo):
     for car in nearby_cars:
         car_coordinates = (car.location.latitude, car.location.longitude)
         dist = distance(cargo_coordinates, car_coordinates).miles
-        if dist < 450:
+        if dist <= int(max_distance):
             result.append(car)
     return result
 
@@ -67,11 +67,19 @@ class CargoUpdateView(APIView):
 
 class CargoListView(APIView):
     def get(self, request):
+        min_weight = request.GET.get('min_weight') if 'min_weight' in request.GET else '0'
+        max_weight = request.GET.get('max_weight') if 'max_weight' in request.GET else '1000'
+        max_distance = request.GET.get('max_distance') if 'max_distance' in request.GET else '450'
+
         cargos = Cargo.objects.all()
+        if min_weight:
+            cargos = cargos.filter(weight__gte=min_weight)
+        if max_weight:
+            cargos = cargos.filter(weight__lte=max_weight)
 
         cargo_data = []
         for cargo in cargos:
-            nearby_cars = get_nearby_cars(cargo)
+            nearby_cars = get_nearby_cars(cargo, max_distance)
 
             serializer = CargoSerializer(cargo)
 
