@@ -24,12 +24,15 @@ class Command(BaseCommand):
     help = 'Creation of 20 cars'
 
     def handle(self, *args, **options):
-        for i in range(20):
-            car = Car()
-            car.number = ''.join(str(random.randint(1000, 9999))) + generate_random_letter()
-            car.payload = random.randint(1, 1000)
-            car.location = get_random_location()
+        if not Car.objects.exists():
+            for i in range(20):
+                car = Car()
+                car.number = ''.join(str(random.randint(1000, 9999))) + generate_random_letter()
+                car.payload = random.randint(1, 1000)
+                car.location = get_random_location()
 
-            car.save()
+                car.save()
 
-        self.stdout.write(self.style.SUCCESS('Cars successfully created'))
+            self.stdout.write(self.style.SUCCESS('Cars successfully created'))
+        else:
+            self.stdout.write(self.style.WARNING('Data already exists in the table'))

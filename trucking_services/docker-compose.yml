@@ -4,7 +4,7 @@ services:
   pgdb:
     image: postgres
     environment:
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=my_postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     container_name: pgdb
@@ -14,10 +14,19 @@ services:
   django:
     build: .
     container_name: django
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "python manage.py makemigrations && python manage.py migrate 
+     && python manage.py load_data uszips.csv && python manage.py create_cars && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/usr/src/app
     ports:
       - "8000:8000"
     depends_on:
       - pgdb
+
+  scripts:
+    build: .
+    depends_on:
+      - django
+      - pgdb
+    command:  bash -c "python manage.py makemigrations && python manage.py migrate 
+     && python manage.py load_data uszips.csv && python manage.py create_cars"

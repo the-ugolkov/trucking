@@ -13,14 +13,17 @@ class Command(BaseCommand):
 
         with open(csv_file, 'r') as file:
             reader = csv.DictReader(file)
-            for row in reader:
-                location = Location()
-                location.zip = row['zip']
-                location.latitude = row['lat']
-                location.longitude = row['lng']
-                location.city = row['city']
-                location.state = row['state_name']
+            if not Location.objects.exists():
+                for row in reader:
+                    location = Location()
+                    location.zip = row['zip']
+                    location.latitude = row['lat']
+                    location.longitude = row['lng']
+                    location.city = row['city']
+                    location.state = row['state_name']
 
-                location.save()
+                    location.save()
 
-        self.stdout.write(self.style.SUCCESS('Data imported successfully'))
+                self.stdout.write(self.style.SUCCESS('Data imported successfully'))
+            else:
+                self.stdout.write(self.style.WARNING('Data already exists in the table'))
