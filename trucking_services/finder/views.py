@@ -8,16 +8,19 @@ from finder.models import Location, Cargo, Car
 from finder.serializers import CargoSerializer, CarSerializer
 
 
-def get_nearby_cars(cargo, max_distance=450):
+def get_cars_with_distance(cargo):
+    cargo_coordinates = (cargo.pick_up_location.latitude, cargo.pick_up_location.longitude)
+    nearby_cars = Car.objects.all()
+    result = {car.number: round(distance(cargo_coordinates, (car.location.latitude, car.location.longitude)).miles, 2)
+              for car in nearby_cars}
+    return result
+
+
+def get_nearby_cars(cargo, max_dist=450):
     cargo_coordinates = (cargo.pick_up_location.latitude, cargo.pick_up_location.longitude)
     nearby_cars = Car.objects.filter(payload__gt=cargo.weight)
-    result = []
-
-    for car in nearby_cars:
-        car_coordinates = (car.location.latitude, car.location.longitude)
-        dist = distance(cargo_coordinates, car_coordinates).miles
-        if dist <= int(max_distance):
-            result.append(car)
+    result = [car for car in nearby_cars
+              if distance(cargo_coordinates, (car.location.latitude, car.location.longitude)).miles <= int(max_dist)]
     return result
 
 
@@ -96,12 +99,11 @@ class CargoListView(APIView):
 class CargoDetailView(APIView):
     def get(self, request, pk):
         cargo = get_object_or_404(Cargo, id=pk)
-        nearby_cars = get_nearby_cars(cargo)
-        nearby_cars_numbers = [car.number for car in nearby_cars]
+        cars_with_distance = get_cars_with_distance(cargo)
 
         serializer = CargoSerializer(cargo)
 
-        return Response({'cargo_data': serializer.data, 'nearby_cars_numbers': nearby_cars_numbers},
+        return Response({'cargo_data': serializer.data, 'cars_with_distance': cars_with_distance},
                         status=status.HTTP_200_OK)
 
 
