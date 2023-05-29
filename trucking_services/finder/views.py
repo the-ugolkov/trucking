@@ -98,10 +98,8 @@ class CargoDetailView(APIView):
         nearby_cars_numbers = [car.number for car in nearby_cars]
 
         serializer = CargoSerializer(cargo)
-        filtered_data = {key: value for key, value in serializer.data.items() if key in ['pick_up_location',
-                                                                                         'delivery_location', 'weight']}
 
-        return Response({'cargo_data': filtered_data, 'nearby_cars_numbers': nearby_cars_numbers},
+        return Response({'cargo_data': serializer.data, 'nearby_cars_numbers': nearby_cars_numbers},
                         status=status.HTTP_200_OK)
 
 
