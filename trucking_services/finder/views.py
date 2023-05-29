@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from finder.models import Location, Cargo, Car
-from finder.serializers import CargoSerializer, CarSerializer, CargoListSerializer
+from finder.serializers import CargoSerializer, CarSerializer
 
 
 def get_nearby_cars(cargo, max_distance=450):
@@ -81,10 +81,12 @@ class CargoListView(APIView):
         for cargo in cargos:
             nearby_cars = get_nearby_cars(cargo, max_distance)
 
-            serializer = CargoListSerializer(cargo)
+            serializer = CargoSerializer(cargo)
+            filtered_data = {key: value for key, value in serializer.data.items() if key in ['pick_up_location',
+                                                                                             'delivery_location']}
 
             cargo_data.append({
-                'cargo': serializer.data,
+                'cargo': filtered_data,
                 'nearby_cars_count': len(nearby_cars)
             })
 
