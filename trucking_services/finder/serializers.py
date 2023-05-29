@@ -9,6 +9,12 @@ class CargoSerializer(ModelSerializer):
         fields = "__all__"
 
 
+class CargoListSerializer(ModelSerializer):
+    class Meta:
+        model = Cargo
+        fields = ['pick_up_location', 'delivery_location']
+
+
 class LocationSerializer(ModelSerializer):
     class Meta:
         model = Location
