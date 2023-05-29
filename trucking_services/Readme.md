@@ -127,7 +127,9 @@ P.S. Во время сборки будет создан superuser - username: 
 
 ---
 ### Контакты:
-<a href="https://api.whatsapp.com/send?phone=79274444203" style="background-color: gray; border-radius: 20%;"><img src="images/wa.png" alt="WhatsApp" width="40px"></a>
+<div style="background-color: grey; padding: 10px; width: 200px; border-radius: 20px">
+<a href="https://api.whatsapp.com/send?phone=79274444203"><img src="images/wa.png" alt="WhatsApp" width="40px"></a>
 <a href="https://www.t.me/the_ugolkov/"><img src="images/tt.png" alt="telegram" width="40px"></a>
 <a href="https://www.instagram.com/the_ugolkov/"><img src="images/inst.png" alt="instagram" width="40px"></a>
 <a href="https://www.linkedin.com/in/mikhail-ugolkov-33a369270/"><img src="images/lin.png" alt="linkedin" width="40px"></a>
+</div>
