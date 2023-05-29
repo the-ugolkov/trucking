@@ -45,6 +45,8 @@
 
 P.S. Во время сборки будет создан superuser - username: admin , password: 123
 
+---
+
 ### Использование
 #### API endpoints
     * api/cargo/create/ - Создание нового груза (характеристики локаций pick-up, delivery определяются по введенному zip-коду)
@@ -117,3 +119,15 @@ P.S. Во время сборки будет создан superuser - username: 
 <img src="images/filter_cargo.png">
 
 
+---
+
+    Дополенение, которое было реализовано не в рамках ТЗ уже было отмечено выше, но продублирую:
+    при получении списка грузов с доступными для них авто 
+    с точки зрения расстояния происходит фильтрация машин по грузоподьемности и их способности перевезти груз.
+
+---
+### Контакты:
+<a href="https://api.whatsapp.com/send?phone=79274444203"><img src="images/wa.png" alt="WhatsApp" width="40px"></a>
+<a href="https://www.t.me/the_ugolkov/"><img src="images/tt.png" alt="telegram" width="40px"></a>
+<a href="https://www.instagram.com/the_ugolkov/"><img src="images/inst.png" alt="instagram" width="40px"></a>
+<a href="https://www.linkedin.com/in/mikhail-ugolkov-33a369270/"><img src="images/lin.png" alt="linkedin" width="40px"></a>
